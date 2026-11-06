@@ -40,4 +40,4 @@ agent_created: true
 
 ## 仓库说明
 
-本 Skill 目录同时是一个可直接推送到 Gitee 的开源仓库（MIT 许可），当前发布版本为 **v1.0.0**（首个公开发布版本）。仓库首页说明见 [`README.md`](README.md)，版本约定与开发期迭代记录见 [`CHANGELOG.md`](CHANGELOG.md)。项目内的 `.workbuddy/` 目录属于本地状态，不得删除或提交。
+本 Skill 目录同时是一个开源仓库（MIT 许可），地址为 https://gitee.com/hejsky/ai-study-tutor，当前发布版本为 **v1.0.0**（首个公开发布版本，仍处公开实践与验证阶段）。仓库首页说明见 [`README.md`](README.md)，版本约定与开发期迭代记录见 [`CHANGELOG.md`](CHANGELOG.md)。项目内的 `.workbuddy/` 目录属于本地状态，不得删除或提交。
