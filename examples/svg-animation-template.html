@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>教学简笔动画骨架 · 按需替换</title>
+<style>
+  /* ── 使用说明 ─────────────────────────────────────────────
+     1. 这是可复用的最小骨架，不是成品；替换 shape / label 即可。
+     2. 规范：3~8 秒循环、画面主体 ≤5 个、单一动作线、
+        只表达「起点 → 过程 → 结果」；无配音、无字幕动画、无转场。
+     3. 说明文字放在 HTML 文本或图注里，不写进动画。
+     4. 配色 ≤4 种；重点元素用高对比色。
+     ──────────────────────────────────────────────────────── */
+  body { margin:0; background:#FAFAF7; font-family:"PingFang SC","Microsoft YaHei",sans-serif;
+         display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; }
+  h1 { font-size:20px; margin:0 0 6px; }
+  .hint { font-size:14px; color:#666; margin:0 0 16px; }
+  .stage { background:#fff; border:1px solid #E5E5E0; border-radius:14px; padding:16px 24px; }
+  .caption { font-size:14px; color:#555; margin-top:10px; text-align:center; line-height:1.7; }
+
+  /* 6 秒一个循环；按百分比安排四个阶段 */
+  #start   { animation: showStart 6s infinite; }
+  #step1   { opacity:0; animation: showStep1 6s infinite; }
+  #step2   { opacity:0; animation: showStep2 6s infinite; }
+  #result  { opacity:0; animation: showResult 6s infinite; }
+  @keyframes showStart  { 0%,100% {opacity:1} }
+  @keyframes showStep1 { 0%,18%  {opacity:0} 24%,100% {opacity:1} }
+  @keyframes showStep2 { 0%,42%  {opacity:0} 48%,100% {opacity:1} }
+  @keyframes showResult{ 0%,68%  {opacity:0} 76%,94%  {opacity:1} 100% {opacity:0} }
+</style>
+</head>
+<body>
+  <h1>知识点标题</h1>
+  <p class="hint">看这里：一句话说明动画演示什么过程</p>
+  <div class="stage">
+    <svg width="220" height="180" viewBox="0 0 220 180" role="img" aria-label="教学演示动画">
+      <!-- 起点 -->
+      <rect id="start" x="30" y="40" width="160" height="80" rx="8" fill="#FFFFFF" stroke="#3A6EA5" stroke-width="3"/>
+      <!-- 过程：依次出现的元素，按需替换成圆、箭头、线段等 -->
+      <circle id="step1" cx="90" cy="80" r="18" fill="#3A6EA5"/>
+      <circle id="step2" cx="140" cy="80" r="18" fill="#E8785A"/>
+      <!-- 结果 -->
+      <text id="result" x="110" y="160" text-anchor="middle" font-size="22" font-weight="bold" fill="#E8785A">结果标注</text>
+    </svg>
+    <div class="caption">起点　→　过程　→　结果（6 秒循环）</div>
+  </div>
+</body>
+</html>

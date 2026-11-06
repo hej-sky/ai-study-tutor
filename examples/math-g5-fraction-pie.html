@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>分数的基本性质 · 教学简笔动画演示</title>
+<style>
+  body { margin: 0; background: #FAFAF7; font-family: "PingFang SC","Microsoft YaHei",sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; color: #2B2B2B; }
+  h1 { font-size: 22px; margin: 0 0 6px; }
+  p.hint { font-size: 14px; color: #666; margin: 0 0 18px; }
+  .stage { background: #fff; border: 1px solid #E5E5E0; border-radius: 16px; padding: 18px 28px 22px; box-shadow: 0 4px 18px rgba(0,0,0,.05); }
+  svg { display: block; }
+  .caption { font-size: 14px; color: #555; margin-top: 12px; text-align: center; line-height: 1.7; }
+  /* 6 秒循环：圆出现 → 分成 4 块 → 1 块涂色 → 显示 1/4 */
+  .q { fill: #FFFFFF; stroke: #3A6EA5; stroke-width: 3; }
+  #q2 { opacity: 0; animation: show2 6s infinite; }
+  #q3 { opacity: 0; animation: show3 6s infinite; }
+  #q4 { opacity: 0; animation: show4 6s infinite; }
+  #fill { opacity: 0; animation: showFill 6s infinite; }
+  #label { opacity: 0; animation: showLabel 6s infinite; }
+  @keyframes show2   { 0%,13% {opacity:0} 18%,100% {opacity:1} }
+  @keyframes show3   { 0%,29% {opacity:0} 34%,100% {opacity:1} }
+  @keyframes show4   { 0%,45% {opacity:0} 50%,100% {opacity:1} }
+  @keyframes showFill{ 0%,62% {opacity:0} 68%,100% {opacity:1} }
+  @keyframes showLabel{0%,79% {opacity:0} 85%,96% {opacity:1} 100% {opacity:0} }
+</style>
+</head>
+<body>
+  <h1>分数的基本性质</h1>
+  <p class="hint">看这里：一个圆平均分成 4 份，涂色 1 份，就是 1/4（动画 6 秒循环）</p>
+  <div class="stage">
+    <svg width="220" height="220" viewBox="0 0 220 220" role="img" aria-label="圆被平均分成四份，其中一份涂色并标注四分之一">
+      <!-- 圆被平均分成 4 份 -->
+      <path class="q" d="M110,110 L110,30 A80,80 0 0 1 190,110 Z"/>
+      <path class="q" id="q2" d="M110,110 L190,110 A80,80 0 0 1 110,190 Z"/>
+      <path class="q" id="q3" d="M110,110 L110,190 A80,80 0 0 1 30,110 Z"/>
+      <path class="q" id="q4" d="M110,110 L30,110 A80,80 0 0 1 110,30 Z"/>
+      <!-- 涂色其中 1 份 -->
+      <path id="fill" fill="#E8785A" opacity="0" d="M110,110 L110,30 A80,80 0 0 1 190,110 Z"/>
+      <!-- 结果 -->
+      <text id="label" x="110" y="210" text-anchor="middle" font-size="26" font-weight="bold" fill="#E8785A">1/4</text>
+    </svg>
+    <div class="caption">起点：一个完整的圆　→　过程：平均分成 4 份、涂色 1 份　→　结果：1/4</div>
+  </div>
+</body>
+</html>
