@@ -43,6 +43,7 @@ REQUIRED = [
     ".gitattributes",
     "system-prompt.md",
     "usage-guide.md",
+    "eval-checklist.md",
     "check_repo.py",
     "examples/grade2-fraction-lesson.md",
     "examples/guided-dialogue.md",
