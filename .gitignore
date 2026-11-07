@@ -25,6 +25,9 @@ venv/
 .workbuddy/
 .codebuddy/
 
+# 评测勾选记录（模板副本，不随仓库提交）
+evals/
+
 # 构建产物
 dist/
 build/
