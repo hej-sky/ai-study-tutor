@@ -47,6 +47,8 @@ REQUIRED = [
     "check_repo.py",
     "examples/grade2-fraction-lesson.md",
     "examples/guided-dialogue.md",
+    "examples/branching-dialogue.md",
+    "examples/textbook-version.md",
     "examples/math-g5-fraction-pie.html",
     "examples/svg-animation-template.html",
 ]
