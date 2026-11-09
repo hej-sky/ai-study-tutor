@@ -8,7 +8,8 @@
   4. 控制台自检：ZIP 结构、frontmatter、引用路径、体积、头像
 
 单一权威源：本仓库根目录（脚本会自动定位）。本脚本只读取仓库文档，不修改提示词正文。
-升版本时改 VERSION，重跑本脚本，再同步 release/发布清单.md 里的版本号。脚本放在仓库 release/ 下或仓库外同级发布工作区，两处都能直接运行。
+唯一构建入口：仓库 release/build_release.py；仓库外不再保留第二份发布工作区，避免两份物料分叉。
+升版本时改 VERSION，重跑本脚本，再同步 release/发布清单.md 里的版本号。
 """
 from __future__ import annotations
 
@@ -25,8 +26,8 @@ PKG = OUT / "package"
 
 
 def find_repo() -> Path:
-    """兼容两种位置：仓库 release/ 内，或仓库外的同级发布工作区。"""
-    for c in (OUT.parent, OUT.parent / "ai-study-tutor", OUT.parent.parent / "ai-study-tutor"):
+    """从脚本所在位置向上逐级定位仓库根（同时含 SKILL.md 与 system-prompt.md）。"""
+    for c in (OUT, *OUT.parents):
         if (c / "SKILL.md").is_file() and (c / "system-prompt.md").is_file():
             return c
     raise SystemExit("找不到权威仓库（需含 SKILL.md 与 system-prompt.md）")
