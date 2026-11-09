@@ -25,8 +25,7 @@ agent_created: true
 |------|------|
 | 需要确认规则细节 / 修改提示词 | `system-prompt.md` |
 | 需要向使用者解释用法、FAQ、能力边界 | `usage-guide.md` |
-| 规则实测不稳定，需要 few-shot 强化 | `examples/grade2-fraction-lesson.md`、`examples/guided-dialogue.md`（开场引导）、`examples/branching-dialogue.md`（讲解后分支） |
-| 教材版本回显、中途改版本或跨版本对齐不稳定 | `examples/textbook-version.md` |
+| 规则实测不稳定，需要 few-shot 强化 | `examples/few-shot.md` 的**对应小节**：§A 年龄适配 / §B 开场引导 / §C 讲解后分支 / §D 教材版本（只读该小节，不要整篇加载） |
 | 要写一个新的教学动画 | `examples/svg-animation-template.html`（可复用骨架） |
 | 要看一个可播放的成品 | `examples/math-g5-fraction-pie.html` |
 | 要检查仓库是否符合 Gitee 上传条件 | 运行 `python check_repo.py` |
@@ -41,8 +40,8 @@ agent_created: true
 - **解析回显不可省**：首轮四项解析结果不得省略、不得用别的内容替换学生输入；学生当场纠正或中途改版本时只增量更新对应一行，不重发讲解、不重启会话。
 - **动画不花钱**：默认直接写 SVG/CSS 代码；只有代码确实表达不了且学生确认费用后，才可用视频生成兜底。
 - **不删改用户既有文件**：归档目录不存在时创建，同名文件追加序号而非覆盖。
-- **分轮与上限**：遵守首轮 400~500 字硬上限、易错点 2~3 条、线性默认路径；启用分支时每轮末尾必须保留导航条、同一编号第 2 次讲解必须换表征、单编号下钻不超过 2 层，不得提前倾倒或省略巩固环节。
+- **分轮与篇幅**：遵守首轮篇幅参考区间（软性，完整性优先，不删理解必需项）、易错点 2~3 条、线性默认路径；启用分支时每轮末尾必须保留导航条、同一编号第 2 次讲解必须换表征、单编号下钻不超过 2 层，不得提前倾倒或省略巩固环节。
 
 ## 仓库说明
 
-本 Skill 目录同时是一个开源仓库（MIT 许可），地址为 https://gitee.com/hejsky/ai-study-tutor，当前发布版本为 **v1.4.0**（讲解后分支对话 + 教材版本作为第一解析/对齐字段，仍处公开实践与验证阶段）。仓库首页说明见 [`README.md`](README.md)，版本约定与开发期迭代记录见 [`CHANGELOG.md`](CHANGELOG.md)。项目内的 `.workbuddy/` 目录属于本地状态，不得删除或提交。
+本 Skill 目录同时是一个开源仓库（MIT 许可），地址为 https://gitee.com/hejsky/ai-study-tutor，当前发布版本为 **v1.5.0**（篇幅改为「裁冗余不裁内容」、低年级版本字段降级、示例文档归纳，仍处公开实践与验证阶段）。仓库首页说明见 [`README.md`](README.md)，版本约定与开发期迭代记录见 [`CHANGELOG.md`](CHANGELOG.md)。项目内的 `.workbuddy/` 目录属于本地状态，不得删除或提交。
