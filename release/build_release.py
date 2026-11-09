@@ -55,8 +55,10 @@ EXCLUDE = {
 FRONTMATTER = """---
 name: ai-study-tutor
 display_name: 助力学（AI 学习助教）
+display_name_en: AI Study Tutor
 description: 当学生、家长或老师提供课程、章节、知识点、教材照片或作业题，希望按年级与教材版本获得讲解、示意图、分层习题、批改与复习安排时使用本 Skill。触发词：帮我学、讲讲这个知识点、这道题不会、听不懂、拍照、出点题、帮我改、复习。
 description_zh: 面向 1~12 年级、按年级与教材版本适配的 AI 学习助教，完成讲解、演示、习题、批改与复习的闭环。
+description_en: An AI study tutor for grades 1-12 that adapts explanations, diagrams, tiered exercises, grading and review plans to each student's grade level and textbook edition.
 version: {{VERSION}}
 category: 教育学习
 author: 何必再健
@@ -353,8 +355,8 @@ def check(files: list[str], zp: Path, avatar: Path) -> bool:
     end = fm_text.find("\n---\n", 4)
     ok(end > 0, "frontmatter 未闭合")
     fm = fm_text[4:end]
-    required = ["name", "display_name", "description", "description_zh",
-                "version", "category", "author", "license", "examples"]
+    required = ["name", "display_name", "display_name_en", "description", "description_zh",
+                "description_en", "version", "category", "author", "license", "examples"]
     for k in required:
         ok(re.search(rf"^{k}:", fm, re.M) is not None, f"frontmatter 缺必填字段 {k}")
     name_m = re.search(r"^name:\s*(\S+)\s*$", fm, re.M)
