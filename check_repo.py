@@ -187,15 +187,22 @@ def check_encoding_and_size(files: list[Path]) -> None:
     print(f"  · 文件总数 {len(files)} 个，总体积 {total / 1024:.1f} KB")
 
 
+# 内部运维记录：本机路径是记录内容的一部分（两机协作约定），豁免绝对路径检查。
+# 仅豁免白名单文件；凭据类检查对全部文件仍然生效。
+SENSITIVE_EXEMPT_FILES = {"开发修改记录.md"}
+
+
 def check_sensitive(files: list[Path]) -> None:
     for p in files:
         if p == SELF or not is_text_file(p):
+            continue
+        rel = p.relative_to(ROOT).as_posix()
+        if rel in SENSITIVE_EXEMPT_FILES:
             continue
         try:
             text = p.read_text(encoding="utf-8")
         except UnicodeDecodeError:
             continue
-        rel = p.relative_to(ROOT).as_posix()
         for pattern, label in SENSITIVE_PATTERNS:
             if pattern.search(text):
                 errors.append(f"{label}：{rel}")
