@@ -205,7 +205,7 @@ AI 不是"一套话术讲所有科"，五大主科各有专属教法：
 
 ## 文件目录
 
-仓库本身很精简：文档都在根目录，示例集中在 `examples/`，没有多余的层级。
+仓库本身很精简：文档都在根目录，示例集中在 `examples/`，发布物料集中在 `release/`，没有多余的层级。想直接装成 Skill，也可以取 `release/` 里现成的 ZIP（`SKILL.md` 在解压第一层），比复制整个仓库更干净，步骤见 README「方式 B」。
 
 ```
 ai-study-tutor/
@@ -216,7 +216,8 @@ ai-study-tutor/
   ├─ eval-checklist.md 部署后规则核对（仅维护者）
   ├─ check_repo.py     仓库合规自检（维护用）
   ├─ CHANGELOG.md / LICENSE / .gitignore / .gitattributes
-  └─ examples/        示例：few-shot.md（四场景分节）、分数动画、动画骨架
+  ├─ examples/        示例：few-shot.md（四场景分节）、分数动画、动画骨架
+  └─ release/         发布物料：技能包 ZIP、头像、构建脚本、发布清单（维护用）
 ```
 
 AI 在**使用过程中**生成的动画和图片，会按需创建 `animations/` 和 `images/` 两个文件夹，按科目再分一层，文件名按「科目-年级-知识点-类型」命名（如 `animations/math/math-g5-fraction-pie.html`）。**年级和知识点不单独建文件夹**，都写在文件名里——文件夹少、路径短、搜一下就能找到。科目文件夹只在第一次生成该科内容时才创建，不会预先生成一堆空文件夹；AI 每次产出文件都会告诉你完整路径和打开方式。这些是运行时产生的文件夹，仓库里不会预先放空目录。

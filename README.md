@@ -62,6 +62,8 @@
 
 入口是根目录的 [`SKILL.md`](SKILL.md)，其中 `name` 与目录名保持一致；中文名为「助力学」。
 
+**更省事：直接下载现成的技能包。** 仓库 [`release/`](release/) 里有已打包好的 [`ai-study-tutor-v1.5.0.zip`](release/ai-study-tutor-v1.5.0.zip) 和 [`avatar-512.png`](release/avatar-512.png)：把 ZIP 内容解压到上面的目录（`SKILL.md` 要在第一层，别多套一层文件夹），或在 WorkBuddy 里用「添加技能 → 上传技能」直接选这个 ZIP。这个包已补齐市场所需字段、去掉维护文件，比直接拿整个仓库更干净；构建方式与各平台上架步骤见 [`release/发布清单.md`](release/发布清单.md)。
+
 > 这一步同样可以交给 AI 代劳：把上面的仓库地址发给它，说「帮我装好这个 skill」即可。
 
 ---
@@ -94,13 +96,14 @@ ai-study-tutor/
 ├── eval-checklist.md         部署后规则核对（仅维护者，使用者无需阅读）
 ├── check_repo.py             仓库合规自检（维护用，使用本项目不必运行）
 ├── CHANGELOG.md / LICENSE / .gitignore / .gitattributes
+├── release/                  发布物料：技能包 ZIP、头像、构建脚本与发布清单（维护用）
 └── examples/                 示例，可直接照着用
     ├── few-shot.md                  四场景示例合集（§A 年龄 / §B 引导 / §C 分支 / §D 版本）
     ├── math-g5-fraction-pie.html    可播放的分数代码动画
     └── svg-animation-template.html   可复用的动画骨架
 ```
 
-仓库只放静态内容，保持扁平。`animations/` 与 `images/` 是 AI **运行时按需创建**的产物目录，不随仓库分发，也不预置空文件夹；规模前提为「一个学生 / 一个家庭」。
+仓库除 `examples/` 与 `release/` 两个分类目录外保持扁平，且只放静态内容。`release/` 供人下载技能包，AI 运行时不会读它；`animations/` 与 `images/` 是 AI **运行时按需创建**的产物目录，不随仓库分发，也不预置空文件夹；规模前提为「一个学生 / 一个家庭」。
 
 ---
 

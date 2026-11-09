@@ -33,6 +33,9 @@ dist/
 build/
 node_modules/
 
+# 上架包展开目录（由 release/build_release.py 重建）
+release/package/
+
 # AI 运行时产物（按需创建，不随仓库分发）
 animations/
 images/

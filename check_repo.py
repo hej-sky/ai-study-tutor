@@ -8,7 +8,7 @@
 检查项（全部为文件层面的确定性检查，不涉及提示词行为验证）：
   1. 仓库必备文件是否齐全
   2. SKILL.md 的 YAML frontmatter 必填字段
-  3. 文本文件是否为 UTF-8 无 BOM、LF 换行、无 NUL 字节
+  3. 文本文件是否为 UTF-8 无 BOM、LF 换行、无 NUL 字节（已知二进制资产只计体积）
   4. 单文件 <= 50 MB、仓库总体积 <= 500 MB（Gitee 社区版保守配额）
   5. 是否夹带本机绝对路径或疑似凭据
   6. Markdown 相对链接是否指向真实存在的文件
@@ -54,6 +54,8 @@ TEXT_SUFFIXES = {
     ".md", ".html", ".py", ".txt", ".yml", ".yaml", ".json", ".svg", ".css", ".js",
 }
 TEXT_NAMES = {".gitignore", ".gitattributes", ".gitkeep", "LICENSE", "Makefile"}
+# 合法发布资产：只计体积与单文件大小，不做文本层检查（含 NUL 字节属正常）
+BINARY_SUFFIXES = {".png", ".jpg", ".jpeg", ".webp", ".gif", ".ico", ".zip", ".pdf"}
 SKIP_DIRS = {
     ".git", ".idea", ".vscode", ".workbuddy", ".codebuddy",
     "__pycache__", ".venv", "node_modules", "dist", "build",
@@ -157,6 +159,8 @@ def check_encoding_and_size(files: list[Path]) -> None:
         rel = p.relative_to(ROOT).as_posix()
         if len(raw) > MAX_SINGLE:
             errors.append(f"单文件超过 50 MB：{rel} ({len(raw) / 1024 / 1024:.1f} MB)")
+        if p.suffix.lower() in BINARY_SUFFIXES:
+            continue
         if b"\x00" in raw:
             errors.append(f"疑似二进制文件混入文本检查：{rel}")
             continue
