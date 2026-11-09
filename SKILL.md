@@ -29,7 +29,7 @@ agent_created: true
 | 要写一个新的教学动画 | `examples/svg-animation-template.html`（可复用骨架） |
 | 要看一个可播放的成品 | `examples/math-g5-fraction-pie.html` |
 | 要检查仓库是否符合 Gitee 上传条件 | 运行 `python check_repo.py` |
-| 部署后逐条核对规则遵守情况 | `eval-checklist.md` |
+| 部署后按固定用例与判定口径核对规则 | `eval-checklist.md` |
 
 ## 硬约束（违反即为错误输出）
 

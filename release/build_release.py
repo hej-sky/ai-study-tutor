@@ -124,7 +124,7 @@ def build_skill_md() -> str:
     # 3) 删掉指向维护文件的两行（上架包内不存在）
     for line in (
         "| 要检查仓库是否符合 Gitee 上传条件 | 运行 `python check_repo.py` |\n",
-        "| 部署后逐条核对规则遵守情况 | `eval-checklist.md` |\n",
+        "| 部署后按固定用例与判定口径核对规则 | `eval-checklist.md` |\n",
     ):
         assert s.count(line) == 1, f"未找到表格行: {line[:30]}"
         s = s.replace(line, "", 1)
