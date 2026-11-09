@@ -141,7 +141,8 @@ def build_usage_guide() -> str:
     picked = [b for b in blocks if any(b.startswith(k) for k in KEEP_USAGE_SECTIONS)]
     assert len(picked) == len(KEEP_USAGE_SECTIONS), f"章节提取数量不符: {len(picked)}"
     body = "---\n\n".join(b.strip() for b in picked)
-    # 上架包内不存在的本地链接 → 指向线上仓库
+    # 上架包内不存在的本地链接 → 指向线上仓库。只做链接转换，不改内容口径；
+    # 若主文档改了措辞导致漏替换，check() 会因包内死链报 FAIL，不会静默放行。
     body = body.replace(
         "[`README.md`](README.md) 的「用哪种 AI 工具与模型」",
         f"[Gitee 仓库]({REPO_URL}) 的「用哪种 AI 工具与模型」",
@@ -154,10 +155,8 @@ def build_usage_guide() -> str:
         "[`README.md`](README.md)",
         f"[Gitee 仓库]({REPO_URL})",
     )
-    body = body.replace(
-        "1. **把系统提示词粘贴给支持图像生成能力的 AI**（打开 [`system-prompt.md`](system-prompt.md)，把代码块内的全部内容复制过去）",
-        "1. **已装好 Skill 就跳过这一步**；未安装时打开 [`system-prompt.md`](system-prompt.md)，把代码块内全部内容复制为 System Prompt 或会话首条消息",
-    )
+    # 主仓库 usage-guide.md 已与 system-prompt.md 开头的权威口径一致，
+    # 不再需要「内容纠错补丁」；仓库与上架包从同一份文字派生。
     return USAGE_HEADER + body + "\n"
 
 

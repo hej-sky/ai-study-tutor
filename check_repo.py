@@ -11,7 +11,7 @@
   3. 文本文件是否为 UTF-8 无 BOM、LF 换行、无 NUL 字节（已知二进制资产只计体积）
   4. 单文件 <= 50 MB、仓库总体积 <= 500 MB（Gitee 社区版保守配额）
   5. 是否夹带本机绝对路径或疑似凭据
-  6. Markdown 相对链接是否指向真实存在的文件
+  6. Markdown 相对链接是否指向会进入版本库的文件（按 git ls-files 判定；非 Git 仓库回退磁盘）
   7. README.md 是否保持纯 Markdown（无裸 HTML 标签 / 命令块内的尖括号占位符）
   8. 发布版本号一致性（CHANGELOG 首个发布版本 vs README / system-prompt 标注）
 
@@ -93,29 +93,38 @@ def is_text_file(p: Path) -> bool:
     return p.suffix.lower() in TEXT_SUFFIXES or p.name in TEXT_NAMES
 
 
-def all_files() -> list[Path]:
-    """收集会进入版本库的文件。
+def git_tracked() -> set[str] | None:
+    """返回会进入版本库的相对路径（posix）集合；非 Git 仓库或 Git 不可用时返回 None。
 
-    已初始化的仓库优先用 git 判定，这样 .gitignore 忽略掉的 IDE 本地配置
-    （如 .idea/ 里的 CRLF 文件）不会被误判为仓库内容不合规；尚未 git init
-    时回退到磁盘遍历，跳过常见本地状态目录。
+    用 git ls-files 而不是磁盘遍历，这样被 .gitignore 忽略的本地目录
+    （evals/、release/package/、.idea/ 等）不会被误当成仓库内容。
     """
     try:
         top = subprocess.run(
             ["git", "rev-parse", "--show-toplevel"],
             cwd=ROOT, capture_output=True, text=True, check=True, timeout=10,
         )
-        if Path(top.stdout.strip()).resolve() == ROOT.resolve():
-            listing = subprocess.run(
-                ["git", "-c", "core.quotepath=false", "ls-files",
-                 "--cached", "--others", "--exclude-standard"],
-                cwd=ROOT, capture_output=True, text=True, check=True, timeout=10,
-            )
-            paths = [ROOT / line for line in listing.stdout.splitlines() if line.strip()]
-            if paths:
-                return sorted(p for p in paths if p.is_file())
+        if Path(top.stdout.strip()).resolve() != ROOT.resolve():
+            return None
+        listing = subprocess.run(
+            ["git", "-c", "core.quotepath=false", "ls-files",
+             "--cached", "--others", "--exclude-standard"],
+            cwd=ROOT, capture_output=True, text=True, check=True, timeout=10,
+        )
+        return {
+            line.strip().replace(chr(92), "/")
+            for line in listing.stdout.splitlines() if line.strip()
+        }
     except (OSError, subprocess.SubprocessError):
-        pass
+        return None
+
+
+def all_files(tracked: set[str] | None) -> list[Path]:
+    """收集会进入版本库的文件；非 Git 仓库时回退磁盘遍历并跳过本地状态目录。"""
+    if tracked is not None:
+        files = sorted(p for p in (ROOT / rel for rel in tracked) if p.is_file())
+        if files:
+            return files
 
     result = []
     for p in ROOT.rglob("*"):
@@ -192,7 +201,21 @@ def check_sensitive(files: list[Path]) -> None:
                 errors.append(f"{label}：{rel}")
 
 
-def check_links(files: list[Path]) -> None:
+def check_links(files: list[Path], tracked: set[str] | None) -> None:
+    """Markdown 相对链接必须指向会进入版本库的文件或目录。
+
+    按 git ls-files 判定，避免「本机恰好有 evals/ 目录所以自检 PASS、
+    clone 后链接却是死链」这类判定盲点；非 Git 仓库回退磁盘存在性。
+    目录链接只要其下有受控文件即视为可达（如 examples/、release/）。
+    """
+    def reachable(rel: str) -> bool:
+        rel = rel.rstrip("/")
+        if not rel:
+            return True
+        if tracked is None:
+            return (ROOT / rel).exists()
+        return rel in tracked or any(f.startswith(rel + "/") for f in tracked)
+
     for p in files:
         if p.suffix.lower() != ".md":
             continue
@@ -204,10 +227,16 @@ def check_links(files: list[Path]) -> None:
                 continue
             if "<" in t or "~" in t or "*" in t:
                 continue  # 占位符或示例路径
-            c1 = (p.parent / t).resolve()
-            c2 = (ROOT / t).resolve()
-            if not c1.exists() and not c2.exists():
-                errors.append(f"Markdown 链接目标不存在：{rel} → {t}")
+            candidates = []
+            for base in (p.parent, ROOT):
+                try:
+                    candidates.append(
+                        (base / t).resolve().relative_to(ROOT.resolve()).as_posix()
+                    )
+                except ValueError:
+                    continue  # 指向仓库外的路径
+            if not any(reachable(c) for c in candidates):
+                errors.append(f"Markdown 链接目标不在版本库内：{rel} → {t}")
 
 
 def check_readme_markdown() -> None:
@@ -265,7 +294,8 @@ def main() -> int:
     print("Gitee 仓库合规自检")
     print(f"根目录：{ROOT}\n")
 
-    files = all_files()
+    tracked = git_tracked()
+    files = all_files(tracked)
     print("[1/8] 必备文件")
     check_required()
     print("[2/8] SKILL.md frontmatter")
@@ -275,7 +305,7 @@ def main() -> int:
     print("[4/8] 本机路径与凭据")
     check_sensitive(files)
     print("[5/8] Markdown 相对链接")
-    check_links(files)
+    check_links(files, tracked)
     print("[6/8] README 纯 Markdown")
     check_readme_markdown()
     print("[7/8] 发布版本号一致性")
