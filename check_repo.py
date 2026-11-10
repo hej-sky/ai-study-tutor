@@ -66,10 +66,10 @@ MAX_SINGLE = 50 * 1024 * 1024       # 单文件 50 MB
 MAX_TOTAL = 500 * 1024 * 1024       # 单仓库 500 MB
 
 SENSITIVE_PATTERNS = [
-    (re.compile(r"[A-Za-z]:[\\/]Users[\\/]", re.I), "Windows 本机绝对路径"),
-    (re.compile(r"/(?:Users|home)/[A-Za-z0-9._-]+/"), "Unix 本机绝对路径"),
-    (re.compile(r"(?:password|passwd|api_key|secret|access_token)\s*[:=]\s*\S+", re.I), "疑似凭据赋值"),
-    (re.compile(r"\b(?:ghp_|gho_|github_pat_)[A-Za-z0-9_]{20,}"), "疑似访问令牌"),
+    (re.compile(r"[A-Za-z]:[\\/]Users[\\/]", re.I), "Windows 本机绝对路径", "path"),
+    (re.compile(r"/(?:Users|home)/[A-Za-z0-9._-]+/"), "Unix 本机绝对路径", "path"),
+    (re.compile(r"(?:password|passwd|api_key|secret|access_token)\s*[:=]\s*\S+", re.I), "疑似凭据赋值", "cred"),
+    (re.compile(r"\b(?:ghp_|gho_|github_pat_)[A-Za-z0-9_]{20,}"), "疑似访问令牌", "cred"),
 ]
 
 LINK_RE = re.compile(r"\[[^\]]*\]\(([^)]+)\)")
@@ -187,9 +187,10 @@ def check_encoding_and_size(files: list[Path]) -> None:
     print(f"  · 文件总数 {len(files)} 个，总体积 {total / 1024:.1f} KB")
 
 
-# 内部运维记录：本机路径是记录内容的一部分（两机协作约定），豁免绝对路径检查。
-# 仅豁免白名单文件；凭据类检查对全部文件仍然生效。
+# 内部运维记录：本机路径是记录内容的一部分（两机协作约定），只豁免路径类检查。
+# 凭据 / 令牌类检查对包括白名单文件在内的全部文件仍然生效。
 SENSITIVE_EXEMPT_FILES = {"开发修改记录.md"}
+EXEMPT_KINDS = {"path"}
 
 
 def check_sensitive(files: list[Path]) -> None:
@@ -197,13 +198,14 @@ def check_sensitive(files: list[Path]) -> None:
         if p == SELF or not is_text_file(p):
             continue
         rel = p.relative_to(ROOT).as_posix()
-        if rel in SENSITIVE_EXEMPT_FILES:
-            continue
         try:
             text = p.read_text(encoding="utf-8")
         except UnicodeDecodeError:
             continue
-        for pattern, label in SENSITIVE_PATTERNS:
+        for pattern, label, kind in SENSITIVE_PATTERNS:
+            # 白名单文件只豁免本机绝对路径；凭据 / 令牌检查不豁免。
+            if kind in EXEMPT_KINDS and rel in SENSITIVE_EXEMPT_FILES:
+                continue
             if pattern.search(text):
                 errors.append(f"{label}：{rel}")
 
