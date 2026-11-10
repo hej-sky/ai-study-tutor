@@ -14,6 +14,7 @@
 - **发布清单加渠道状态表**：技能已发布、Release 待建、专家未上传，各自到哪一步写在表里，下次不用对着清单猜。
 - **补文件索引（同版追加）**：README 新增「仓库里都有什么」——一张目录树加一张「想做什么 → 看哪个」对照表，维护者文件一句话带过。索引放首页而不是单独建文件，也不放进上架包：包里没有那些维护者文件，写了就是死指代。只改首页，**不改变交付内容**，两个 ZIP 未重建、逐字节未变，无需重传平台。
 - **GitHub 镜像立项（同版追加）**：`发布清单.md` 新增 6-1 节，写清两条路——Gitee「仓库镜像」推送（推荐，一次配置自动同步）与 Token 手动推送（应急）。实测记录：公司网络 HTTPS 能通 github.com，但镜像授权的 OAuth 回调被拦，待家里网络配置；README 的镜像说明等镜像建好再补。
+- **GitHub 镜像已同步（同版追加）**：走方式 B，用 fine-grained Token 推送成功——master、develop 与 v1.5.0~v1.5.2 标签已上 github.com/hej-sky/ai-study-tutor（GitHub 用户名 `hej-sky`，与 Gitee 的 `hejsky` 不同）。README 方法二补了一句镜像说明，反馈口仍只收 Gitee。收尾两步在网页手动做：默认分支切到 master、删掉建库时自动生成的空 `main`（Token 只给了 Contents 权限，改不了仓库设置，属正常）。**日常规则：每次推完 Gitee 记得 `git push github master develop --tags`**。
 - **未改动的部分**：`system-prompt.md` 代码块内的提示词正文仍一字未改（462 行 / 18225 字符），`eval-checklist.md` 判定口径与状态表不动。
 
 ## v1.5.1 · 精简整理与文案通俗化（2026-11-10）

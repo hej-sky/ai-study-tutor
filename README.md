@@ -46,6 +46,8 @@
 
 不想手动放文件，也可以在 WorkBuddy 里点「技能 → 添加技能 → 上传技能」，直接选这个 ZIP。
 
+> 同样的内容在 GitHub 也有一份（[hej-sky/ai-study-tutor](https://github.com/hej-sky/ai-study-tutor)），只是同步镜像。问题和反馈请发 [Gitee 仓库](https://gitee.com/hejsky/ai-study-tutor/issues)，GitHub 上的留言不保证看得到。
+
 ### 方法三 · 不装，只复制提示词
 
 打开 [`system-prompt.md`](system-prompt.md)，把代码块里的全部内容复制成系统提示词。
