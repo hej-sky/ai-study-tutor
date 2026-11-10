@@ -34,7 +34,7 @@ def find_repo() -> Path:
 
 
 REPO = find_repo()
-VERSION = "1.5.0"
+VERSION = "1.5.1"
 SLUG = "ai-study-tutor"
 REPO_URL = "https://gitee.com/hejsky/ai-study-tutor"
 ZIP_NAME = f"{SLUG}-v{VERSION}.zip"
@@ -142,7 +142,9 @@ def build_usage_guide() -> str:
     blocks = re.split(r"(?=^## )", s, flags=re.M)
     picked = [b for b in blocks if any(b.startswith(k) for k in KEEP_USAGE_SECTIONS)]
     assert len(picked) == len(KEEP_USAGE_SECTIONS), f"章节提取数量不符: {len(picked)}"
-    body = "---\n\n".join(b.strip() for b in picked)
+    # 各小节末尾原有的 --- 分隔线与 join 自带的分隔线会拼成一条长横线，先剥掉再拼
+    cleaned = [b.strip().rstrip("-").strip() for b in picked]
+    body = "\n\n---\n\n".join(cleaned)
     # 上架包内不存在的本地链接 → 指向线上仓库。只做链接转换，不改内容口径；
     # 若主文档改了措辞导致漏替换，check() 会因包内死链报 FAIL，不会静默放行。
     body = body.replace(
