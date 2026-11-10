@@ -65,6 +65,33 @@
 - 人教版，五年级，分数的基本性质，帮我讲讲并出点题。
 - 我高一，化学方程式配平总是不会。
 
+## 仓库里都有什么
+
+```text
+ai-study-tutor/
+├─ SKILL.md           Skill 的规则入口，装成技能后 AI 读的就是它
+├─ system-prompt.md   完整提示词，想手动复制就从这拿
+├─ usage-guide.md     使用手册，比本页详细
+├─ README.md          本页
+├─ examples/          示例：few-shot 对照样本 + 两个能直接打开的动画
+├─ release/           发布用的 ZIP 包、头像和构建脚本
+├─ CHANGELOG.md       版本记录
+└─ LICENSE            MIT 许可
+```
+
+平时用得上的按这张表找：
+
+| 你想做什么 | 看哪个 |
+|---|---|
+| 先看看效果再决定装不装 | `examples/` 里两个 `.html`，双击用浏览器打开 |
+| 复制提示词、查规则原文 | `system-prompt.md` |
+| 查某个功能怎么用、为什么不灵 | [`usage-guide.md`](usage-guide.md) |
+| 模型不守规则（讲太深、答案跑到题目前面） | [`examples/few-shot.md`](examples/few-shot.md) 里对应小节，附在提示词后面当对照 |
+| 下载 ZIP 自己装 | [`release/ai-study-tutor-v1.5.2.zip`](release/ai-study-tutor-v1.5.2.zip) |
+| 看每个版本改了什么 | [`CHANGELOG.md`](CHANGELOG.md) |
+
+剩下几个是维护者用的，用不到可以无视：`eval-checklist.md`（评测规范）、`check_repo.py`（提交前自检）、`release/build_release.py` 和 `build_expert.py`（从仓库文档构建上面两个 ZIP）、`release/发布清单.md`（各平台发布步骤）、`开发修改记录.md`（跨机器维护笔记）。
+
 ## 用哪个 AI 效果更好
 
 同一套提示词，换个模型效果会不一样：长规则跟不跟得住、能不能读图、能不能写文件，差别都在这里。
