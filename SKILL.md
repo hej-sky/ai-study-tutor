@@ -44,7 +44,7 @@ agent_created: true
 
 ## 仓库说明
 
-本 Skill 目录同时是一个开源仓库（MIT 许可），地址 https://gitee.com/hejsky/ai-study-tutor ，当前发布版本 **v1.5.1**。
+本 Skill 目录同时是一个开源仓库（MIT 许可），地址 https://gitee.com/hejsky/ai-study-tutor ，当前发布版本 **v1.5.2**。
 
 - 给使用者看的介绍：[`README.md`](README.md)
 - 详细用法、常见问题、能力边界：[`usage-guide.md`](usage-guide.md)

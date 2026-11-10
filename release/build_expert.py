@@ -13,13 +13,13 @@
     两个入口的解析器不同，同一个 ZIP 无法同时满足。
 
 同源保证（重要）：
-    技能部分直接读取 release/ai-study-tutor-v1.5.1.zip 的 6 个文件，
+    技能部分直接读取 release/ai-study-tutor-v1.5.2.zip 的 6 个文件，
     头像直接读取 release/avatar-512.png，不另存副本、不做内容补丁。
     因此专家包与技能包永远同版本、同内容，不会出现两份口径分叉。
 
 产物：
-    release/ai-study-tutor-expert-v1.5.1.zip
-    （--flat 时：release/ai-study-tutor-expert-v1.5.1-flat.zip）
+    release/ai-study-tutor-expert-v1.5.2.zip
+    （--flat 时：release/ai-study-tutor-expert-v1.5.2-flat.zip）
 """
 
 from __future__ import annotations
@@ -33,7 +33,7 @@ import zipfile
 from pathlib import Path
 
 OUT = Path(__file__).resolve().parent
-VERSION = "1.5.1"
+VERSION = "1.5.2"
 NAME = "ai-study-tutor"
 AGENT_NAME = "ai-study-tutor"
 SKILL_ZIP = f"ai-study-tutor-v{VERSION}.zip"

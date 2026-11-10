@@ -34,7 +34,7 @@ def find_repo() -> Path:
 
 
 REPO = find_repo()
-VERSION = "1.5.1"
+VERSION = "1.5.2"
 SLUG = "ai-study-tutor"
 REPO_URL = "https://gitee.com/hejsky/ai-study-tutor"
 ZIP_NAME = f"{SLUG}-v{VERSION}.zip"
@@ -96,6 +96,7 @@ USAGE_HEADER = """# 助力学 · 使用说明（上架包精简版）
 
 KEEP_USAGE_SECTIONS = (
     "## 三步上手",
+    "## 怎么装",
     "## 常见问题",
     "## 附：客观能力边界",
     "## 输入区字段与偏好",
