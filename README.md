@@ -1,6 +1,6 @@
 # 助力学（AI 学习助教）
 
-**给小学一年级到高三学生的 AI 学习助教** · WorkBuddy 技能库搜「助力学」就能装 · 不装也能用 · `v1.5.2` · MIT 许可
+**给小学一年级到高三学生的 AI 学习助教** · WorkBuddy 技能库搜「助力学」就能装 · 不装也能用 · `v1.6.0` · MIT 许可
 
 把没听懂的课、不会做的题、拍下来的课本页发给 AI，它会像一位熟悉你年级的老师，带你走一遍：
 
@@ -41,7 +41,7 @@
 
 适合两种人：想自己先看一眼包里有什么，或者技能库里搜不到（装的是旧版本）。
 
-1. 下载 [`release/ai-study-tutor-v1.5.2.zip`](release/ai-study-tutor-v1.5.2.zip)。
+1. 下载 [`release/ai-study-tutor-v1.6.0.zip`](release/ai-study-tutor-v1.6.0.zip)。这是 v1.6.0 的技能包，包含本版两条规则修订。
 2. 解压到 `~/.workbuddy/skills/ai-study-tutor/`。`SKILL.md` 要落在这一层，别多套一层文件夹。
 
 不想手动放文件，也可以在 WorkBuddy 里点「技能 → 添加技能 → 上传技能」，直接选这个 ZIP。
@@ -89,7 +89,7 @@ ai-study-tutor/
 | 复制提示词、查规则原文 | `system-prompt.md` |
 | 查某个功能怎么用、为什么不灵 | [`usage-guide.md`](usage-guide.md) |
 | 模型不守规则（讲太深、答案跑到题目前面） | [`examples/few-shot.md`](examples/few-shot.md) 里对应小节，附在提示词后面当对照 |
-| 下载 ZIP 自己装 | [`release/ai-study-tutor-v1.5.2.zip`](release/ai-study-tutor-v1.5.2.zip) |
+| 下载 ZIP 自己装 | [`release/ai-study-tutor-v1.6.0.zip`](release/ai-study-tutor-v1.6.0.zip) |
 | 看每个版本改了什么 | [`CHANGELOG.md`](CHANGELOG.md) |
 
 剩下几个是维护者用的，用不到可以无视：`eval-checklist.md`（评测规范）、`check_repo.py`（提交前自检）、`release/build_release.py` 和 `build_expert.py`（从仓库文档构建上面两个 ZIP）、`release/发布清单.md`（各平台发布步骤）、`开发修改记录.md`（跨机器维护笔记）。
@@ -102,7 +102,7 @@ ai-study-tutor/
 
 ## 现在做到哪一步了
 
-**`v1.5.2` 已经可以正常用来辅导学习**，但还在打磨，不会替你打「完全验证」的包票。
+**`v1.6.0` 已经可以正常用来辅导学习**，但还在打磨，不会替你打「完全验证」的包票。
 
 - **自查过**：规则之间不打架，文件层面自检全通过。自检只看文件，不看模型表现。
 - **实测过**：在 WorkBuddy 上跑过一次真实交互，另有几轮本机抽样，其中一次跑完完整三轮流程。这些样本只用来改规则，**不算逐项验收**。
@@ -115,7 +115,7 @@ ai-study-tutor/
 
 ## 已知限制
 
-动画要能显示网页才动得起来；写文件要看 AI 有没有这个能力；规则效果随模型而异。完整 8 条见 [使用手册](usage-guide.md) 末尾「附：客观能力边界」。
+动画要能显示网页才动得起来；写文件要看 AI 有没有这个能力；规则效果随模型而异。完整 9 条见 [使用手册](usage-guide.md) 末尾「附：客观能力边界」。
 
 ## 许可与免责
 

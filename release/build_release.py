@@ -34,7 +34,7 @@ def find_repo() -> Path:
 
 
 REPO = find_repo()
-VERSION = "1.5.2"
+VERSION = "1.6.0"
 SLUG = "ai-study-tutor"
 REPO_URL = "https://gitee.com/hejsky/ai-study-tutor"
 ZIP_NAME = f"{SLUG}-v{VERSION}.zip"
