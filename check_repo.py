@@ -13,7 +13,7 @@
   5. 是否夹带本机绝对路径或疑似凭据
   6. Markdown 相对链接是否指向会进入版本库的文件（按 git ls-files 判定；非 Git 仓库回退磁盘）
   7. README.md 是否保持纯 Markdown（无裸 HTML 标签 / 命令块内的尖括号占位符）
-  8. 发布版本号一致性（CHANGELOG 首个发布版本 vs README / system-prompt 标注）
+  8. 发布版本号一致性（CHANGELOG vs 两个构建脚本 VERSION）；README 使用者可见面不得出现版本号
 
 扫描范围：仅「会进入版本库」的文件。仓库已 git init 时以 git 判定为准（自动尊重
 .gitignore），IDE 自动生成的 .idea/ 等本地状态文件不参与检查；尚未 git init 时
@@ -84,6 +84,8 @@ HTML_TAG_RE = re.compile(
 
 # CHANGELOG 中首个「## vX.Y.Z」即当前发布版本；附录里的开发期编号用 ### 前缀，不会命中。
 RELEASE_VER_RE = re.compile(r"^## (v\d+\.\d+\.\d+)\b", re.M)
+# 任意位置的软件版本号，用于检查使用者可见文档（发布清单 7-1）
+ANY_VER_RE = re.compile(r"v\d+\.\d+\.\d+")
 
 errors: list[str] = []
 warnings: list[str] = []
@@ -280,9 +282,12 @@ def check_readme_markdown() -> None:
 
 
 def check_release_version() -> None:
-    """对外发布版本号须一致：CHANGELOG 首个发布版本 = README 与 system-prompt 的标注。
+    """发布版本号一致性：CHANGELOG 首个发布版本 = 两个构建脚本的 VERSION。
 
-    开发期内部编号（v1 ~ v4.5.1）保存在 CHANGELOG 附录与测试报告中，不参与此检查。
+    版本号是维护侧标识（见 release/发布清单.md 7-1）：维护层保留完整版本号，
+    使用者可见的 README.md 不出现 vX.Y.Z；链接地址里的 ZIP 文件名不算——
+    附件名与哈希校验需要它，按 7-1 允许留在地址里。
+    真人试用说明.md 里用于区分该测哪份的消歧版本号，不参与本检查。
     """
     cl = ROOT / "CHANGELOG.md"
     if not cl.is_file():
@@ -292,11 +297,18 @@ def check_release_version() -> None:
         errors.append("CHANGELOG.md 未找到形如 '## vX.Y.Z' 的发布版本条目")
         return
     ver = m.group(1)
-    for rel in ("README.md", "system-prompt.md"):
+    num = ver.lstrip("v")  # 构建脚本的 VERSION 不带 v 前缀
+    for rel in ("release/build_release.py", "release/build_expert.py"):
         p = ROOT / rel
-        if p.is_file() and ver not in p.read_text(encoding="utf-8"):
-            errors.append(f"{rel} 未标注当前发布版本 {ver}")
-    print(f"  · 当前发布版本 {ver}")
+        if p.is_file() and f'VERSION = "{num}"' not in p.read_text(encoding="utf-8"):
+            errors.append(f"{rel} 的 VERSION 与当前发布版本 {ver} 不一致")
+    readme = ROOT / "README.md"
+    if readme.is_file():
+        text = readme.read_text(encoding="utf-8")
+        visible = re.sub(r"\]\([^)]*\)", "]", text)  # 剔除链接地址
+        if ANY_VER_RE.search(visible):
+            errors.append("README.md 可见文字出现软件版本号（发布清单 7-1：使用者可见面不显示版本号）")
+    print(f"  · 当前发布版本 {ver}（维护层校验；README 不显示版本号）")
 
 
 def main() -> int:
