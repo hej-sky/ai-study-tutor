@@ -333,11 +333,12 @@ def check_external_resources() -> None:
             errors.append(f"external-resources.md 含非 https 链接：{url}")
         if url.rstrip("/").endswith((".png", ".jpg", ".zip", ".pdf")):
             errors.append(f"external-resources.md 疑似文件直链而非入口页：{url}")
-    # 条目卡片的必备字段（「### 」开头的资源条目，不含模板）
-    entries = re.findall(r"^### [^#\n].*$", text, re.M)
+    # 条目卡片的必备字段（「### 」开头的资源条目；「扩展登记模板」节内的样例条目不参与计数与校验）
+    tpl_pos = text.find("## 扩展登记模板")
+    entries: list[str] = []
     for m in re.finditer(r"^### (.+)$", text, re.M):
         title = m.group(1)
-        if "模板" in title or "复制填写" in title:
+        if tpl_pos != -1 and m.start() > tpl_pos:
             continue
         start = m.end()
         nxt = text.find("\n### ", start)
@@ -345,6 +346,7 @@ def check_external_resources() -> None:
         for field in ("入口：", "触发场景：", "给地址方式：", "范围：", "禁止事项："):
             if field not in body:
                 errors.append(f"external-resources.md 条目「{title.strip()}」缺字段：{field}")
+        entries.append(title.strip())
     print(f"  · external-resources.md：{len(entries)} 个资源条目")
 
 
