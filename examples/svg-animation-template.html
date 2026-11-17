@@ -2,27 +2,36 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<title>教学简笔动画骨架 · 按需替换</title>
+<title>教学简笔动画骨架 · 分步交互版</title>
 <style>
   /* ── 使用说明 ─────────────────────────────────────────────
-     1. 这是可复用的最小骨架，不是成品；替换 shape / label 即可。
-     2. 规范：3~8 秒循环、画面主体 ≤5 个、单一动作线、
-        只表达「起点 → 过程 → 结果」；无配音、无字幕动画、无转场。
-     3. 说明文字放在 HTML 文本或图注里，不写进动画。
-     4. 配色 ≤4 种；重点元素用高对比色。
+     1. 这是可复用的最小骨架，不是成品；替换 shape / label / 步骤文字即可。
+     2. 规范：画面主体 ≤5 个、单一动作线、只表达「起点 → 过程 → 结果」；
+        无配音、无字幕动画、无转场；配色 ≤4 种，重点元素用高对比色。
+     3. 两种播放模式（借鉴「互动教学图专家」的分步交互思路）：
+        a. 手动分步（默认）：点「上一步 / 下一步」逐帧看，学生自己控制节奏；
+        b. 自动循环：点「自动播放」回到原来的 6 秒循环，适合投影课堂。
+     4. 说明文字放在 HTML 文本或图注里，不写进动画；每步一行图注，讲清「这步在做什么」。
+     5. 纯前端实现，零外部依赖、零费用；不支持 JS 的环境降级为自动循环版（见文末说明）。
      ──────────────────────────────────────────────────────── */
   body { margin:0; background:#FAFAF7; font-family:"PingFang SC","Microsoft YaHei",sans-serif;
          display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; }
   h1 { font-size:20px; margin:0 0 6px; }
   .hint { font-size:14px; color:#666; margin:0 0 16px; }
   .stage { background:#fff; border:1px solid #E5E5E0; border-radius:14px; padding:16px 24px; }
-  .caption { font-size:14px; color:#555; margin-top:10px; text-align:center; line-height:1.7; }
+  .caption { font-size:14px; color:#555; margin-top:10px; text-align:center; line-height:1.7; min-height:1.7em; }
+  .controls { margin-top:12px; display:flex; gap:8px; justify-content:center; }
+  .controls button { font-size:14px; padding:6px 14px; border:1px solid #3A6EA5; border-radius:8px;
+                     background:#fff; color:#3A6EA5; cursor:pointer; }
+  .controls button:hover { background:#EEF3FA; }
+  .controls .dot { font-size:14px; color:#999; align-self:center; letter-spacing:2px; }
 
-  /* 6 秒一个循环；按百分比安排四个阶段 */
-  #start   { animation: showStart 6s infinite; }
-  #step1   { opacity:0; animation: showStep1 6s infinite; }
-  #step2   { opacity:0; animation: showStep2 6s infinite; }
-  #result  { opacity:0; animation: showResult 6s infinite; }
+  /* 元素默认按步骤显隐；自动播放时改用循环动画（body.autoplay 时启用） */
+  #step1, #step2, #result { opacity:0; transition:opacity .3s; }
+  body.autoplay #start   { animation: showStart 6s infinite; }
+  body.autoplay #step1   { opacity:0; animation: showStep1 6s infinite; }
+  body.autoplay #step2   { opacity:0; animation: showStep2 6s infinite; }
+  body.autoplay #result  { opacity:0; animation: showResult 6s infinite; }
   @keyframes showStart  { 0%,100% {opacity:1} }
   @keyframes showStep1 { 0%,18%  {opacity:0} 24%,100% {opacity:1} }
   @keyframes showStep2 { 0%,42%  {opacity:0} 48%,100% {opacity:1} }
@@ -31,18 +40,64 @@
 </head>
 <body>
   <h1>知识点标题</h1>
-  <p class="hint">看这里：一句话说明动画演示什么过程</p>
+  <p class="hint">看这里：一句话说明动画演示什么过程（点「下一步」逐步看）</p>
   <div class="stage">
     <svg width="220" height="180" viewBox="0 0 220 180" role="img" aria-label="教学演示动画">
-      <!-- 起点 -->
+      <!-- 第 0 步 · 起点 -->
       <rect id="start" x="30" y="40" width="160" height="80" rx="8" fill="#FFFFFF" stroke="#3A6EA5" stroke-width="3"/>
-      <!-- 过程：依次出现的元素，按需替换成圆、箭头、线段等 -->
+      <!-- 第 1、2 步 · 过程：依次出现的元素，按需替换成圆、箭头、线段等 -->
       <circle id="step1" cx="90" cy="80" r="18" fill="#3A6EA5"/>
       <circle id="step2" cx="140" cy="80" r="18" fill="#E8785A"/>
-      <!-- 结果 -->
+      <!-- 第 3 步 · 结果 -->
       <text id="result" x="110" y="160" text-anchor="middle" font-size="22" font-weight="bold" fill="#E8785A">结果标注</text>
     </svg>
-    <div class="caption">起点　→　过程　→　结果（6 秒循环）</div>
+    <div class="caption" id="caption">第 0 步：起点 —— 把这步在做什么写在这里</div>
+    <div class="controls">
+      <button id="prev" aria-label="上一步">◀ 上一步</button>
+      <span class="dot" id="dots">●○○○</span>
+      <button id="next" aria-label="下一步">下一步 ▶</button>
+      <button id="toggle" aria-label="自动播放">自动播放</button>
+    </div>
   </div>
+  <script>
+    /* 分步逻辑：共 4 步（0 起点 → 1 → 2 → 3 结果）。
+       每步控制哪些元素可见 + 图注写什么；步骤数按需增减，保持 ≤5 个画面主体。 */
+    var steps = [
+      { show:[],                     text:"第 0 步：起点 —— 把这步在做什么写在这里" },
+      { show:["step1"],              text:"第 1 步：第一个变化 —— 一句话讲清它说明什么" },
+      { show:["step1","step2"],      text:"第 2 步：第二个变化 —— 与上一步的区别点" },
+      { show:["step1","step2","result"], text:"第 3 步：结果 —— 回到要记的结论" }
+    ];
+    var cur = 0, auto = false;
+    var ids  = ["step1","step2","result"];
+
+    function render() {
+      if (!auto) {
+        var vis = steps[cur].show;
+        ids.forEach(function(id) {
+          document.getElementById(id).style.opacity = vis.indexOf(id) >= 0 ? 1 : 0;
+        });
+      }
+      document.getElementById("caption").textContent = steps[cur].text;
+      document.getElementById("dots").textContent =
+        steps.map(function(_, i) { return i <= cur ? "●" : "○"; }).join("");
+    }
+    document.getElementById("prev").onclick = function() { stopAuto(); cur = Math.max(0, cur - 1); render(); };
+    document.getElementById("next").onclick = function() { stopAuto(); cur = Math.min(steps.length - 1, cur + 1); render(); };
+    document.getElementById("toggle").onclick = function() {
+      auto = !auto;
+      document.body.classList.toggle("autoplay", auto);
+      document.getElementById("toggle").textContent = auto ? "暂停" : "自动播放";
+      render();
+    };
+    function stopAuto() {
+      if (auto) {
+        auto = false;
+        document.body.classList.remove("autoplay");
+        document.getElementById("toggle").textContent = "自动播放";
+      }
+    }
+    render();
+  </script>
 </body>
 </html>

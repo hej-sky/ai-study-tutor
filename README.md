@@ -43,7 +43,7 @@ WorkBuddy 技能库搜「助力学」就能装；不想装，复制一段提示�
 
 适合两种人：想自己先看一眼包里有什么，或者技能库里搜不到（装的是旧版本）。
 
-1. 下载 [技能包 ZIP](release/ai-study-tutor-v1.7.1.zip)，按下面第 2 步放好即可。
+1. 下载 [技能包 ZIP](release/ai-study-tutor-v1.7.2.zip)，按下面第 2 步放好即可。
 2. 解压到 `~/.workbuddy/skills/ai-study-tutor/`。`SKILL.md` 要落在这一层，别多套一层文件夹。
 
 不想手动放文件，也可以在 WorkBuddy 里点「技能 → 添加技能 → 上传技能」，直接选这个 ZIP。

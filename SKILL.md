@@ -25,7 +25,7 @@ agent_created: true
 |------|------|
 | 需要确认规则细节 / 修改提示词 | `system-prompt.md` |
 | 需要向使用者解释用法、FAQ、能力边界 | `usage-guide.md` |
-| 规则实测不稳定，需要 few-shot 强化 | `examples/few-shot.md` 的**对应小节**：§A 年龄适配 / §B 开场引导 / §C 讲解后分支 / §D 教材版本（只读该小节，不要整篇加载） |
+| 规则实测不稳定，需要 few-shot 强化 | `examples/few-shot.md` 的**对应小节**：§A 年龄适配 / §B 开场引导 / §C 讲解后分支 / §D 教材版本 / §E 化学书写规范 / §F 批改错因分类（只读该小节，不要整篇加载） |
 | 要写一个新的教学动画 | `examples/svg-animation-template.html`（可复用骨架） |
 | 要看一个可播放的成品 | `examples/math-g5-fraction-pie.html` |
 | 要检查仓库是否符合 Gitee 上传条件 | 运行 `python check_repo.py` |
@@ -47,7 +47,7 @@ agent_created: true
 
 ## 仓库说明
 
-本 Skill 目录同时是一个开源仓库（MIT 许可），地址 https://gitee.com/hejsky/ai-study-tutor ，当前发布版本 **v1.7.1**。
+本 Skill 目录同时是一个开源仓库（MIT 许可），地址 https://gitee.com/hejsky/ai-study-tutor ，当前发布版本 **v1.7.2**。
 
 - 给使用者看的介绍：[`README.md`](README.md)
 - 详细用法、常见问题、能力边界：[`usage-guide.md`](usage-guide.md)
