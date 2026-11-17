@@ -34,7 +34,7 @@ def find_repo() -> Path:
 
 
 REPO = find_repo()
-VERSION = "1.7.0"
+VERSION = "1.7.1"
 SLUG = "ai-study-tutor"
 REPO_URL = "https://gitee.com/hejsky/ai-study-tutor"
 ZIP_NAME = f"{SLUG}-v{VERSION}.zip"
@@ -44,6 +44,7 @@ AVATAR_NAME = "avatar-512.png"
 COPY_AS_IS = [
     "examples/math-g5-fraction-pie.html",
     "examples/svg-animation-template.html",
+    "external-resources.md",
 ]
 
 # 上架包不携带的维护类文件（避免审核困惑 / 死链 / SkillHub 明确禁止 LICENSE）
@@ -344,6 +345,7 @@ def check(files: list[str], zp: Path, avatar: Path) -> bool:
     with zipfile.ZipFile(zp) as z:
         names = z.namelist()
     ok("SKILL.md" in names, "ZIP 根目录第一层缺 SKILL.md")
+    ok("external-resources.md" in names, "ZIP 缺 external-resources.md（SKILL.md 按需加载表引用它）")
     ok(not any(n.startswith(SLUG + "/") for n in names), "ZIP 多套了一层 ai-study-tutor/ 文件夹")
     depths = [n.count("/") for n in names]
     ok(max(depths) <= 1, f"目录层级超过两层：{max(depths)} 个斜杠")

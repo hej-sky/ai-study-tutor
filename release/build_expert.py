@@ -13,13 +13,13 @@
     两个入口的解析器不同，同一个 ZIP 无法同时满足。
 
 同源保证（重要）：
-    技能部分直接读取 release/ai-study-tutor-v1.7.0.zip 的 6 个文件，
+    技能部分直接读取 release/ai-study-tutor-v1.7.1.zip 的 7 个文件，
     头像直接读取 release/avatar-512.png，不另存副本、不做内容补丁。
     因此专家包与技能包永远同版本、同内容，不会出现两份口径分叉。
 
 产物：
-    release/ai-study-tutor-expert-v1.7.0.zip
-    （--flat 时：release/ai-study-tutor-expert-v1.7.0-flat.zip）
+    release/ai-study-tutor-expert-v1.7.1.zip
+    （--flat 时：release/ai-study-tutor-expert-v1.7.1-flat.zip）
 """
 
 from __future__ import annotations
@@ -33,7 +33,7 @@ import zipfile
 from pathlib import Path
 
 OUT = Path(__file__).resolve().parent
-VERSION = "1.7.0"
+VERSION = "1.7.1"
 NAME = "ai-study-tutor"
 AGENT_NAME = "ai-study-tutor"
 SKILL_ZIP = f"ai-study-tutor-v{VERSION}.zip"
@@ -182,7 +182,7 @@ README_MD = f"""# 助力学 · 专家包（WorkBuddy 开放平台「专家」入
 
 ## 与技能入口包的关系
 
-`skills/{NAME}/` 下的 6 个文件**逐字节复制**自同版本技能入口上架包
+`skills/{NAME}/` 下的 7 个文件**逐字节复制**自同版本技能入口上架包
 `{SKILL_ZIP}`，头像复制自 `{AVATAR}`。两者由
 `build_expert.py` 一次构建、同源派生，不存在内容补丁或第二份提示词。
 
@@ -236,6 +236,7 @@ def read_sources() -> dict[str, bytes]:
         names = z.namelist()
         expected = {
             "SKILL.md", "system-prompt.md", "usage-guide.md",
+            "external-resources.md",
             "examples/few-shot.md",
             "examples/math-g5-fraction-pie.html",
             "examples/svg-animation-template.html",

@@ -43,6 +43,7 @@ REQUIRED = [
     ".gitattributes",
     "system-prompt.md",
     "usage-guide.md",
+    "external-resources.md",
     "eval-checklist.md",
     "check_repo.py",
     "examples/few-shot.md",
@@ -311,27 +312,65 @@ def check_release_version() -> None:
     print(f"  · 当前发布版本 {ver}（维护层校验；README 不显示版本号）")
 
 
+def check_external_resources() -> None:
+    """external-resources.md 结构与链接校验：注册表文件是外部链接的唯一合法出口。
+
+    校验三件事：
+      1. 必备三节齐全（使用原则 / 外部资源免责声明 / 扩展登记模板）；
+      2. 所有 URL 是 https 且形如完整入口链接（防拼深层链接的约定靠人审，脚本只挡格式错误）；
+      3. 注册表条目数与「给地址方式」字段齐全（新增条目漏字段时能发现）。
+    """
+    p = ROOT / "external-resources.md"
+    if not p.is_file():
+        return
+    text = p.read_text(encoding="utf-8")
+    for section in ("## 使用原则", "## 外部资源免责声明", "## 扩展登记模板"):
+        if section not in text:
+            errors.append(f"external-resources.md 缺少必备小节：{section}")
+    for m in re.finditer(r"https?://[^\s`）)]+", text):
+        url = m.group(0)
+        if not url.startswith("https://"):
+            errors.append(f"external-resources.md 含非 https 链接：{url}")
+        if url.rstrip("/").endswith((".png", ".jpg", ".zip", ".pdf")):
+            errors.append(f"external-resources.md 疑似文件直链而非入口页：{url}")
+    # 条目卡片的必备字段（「### 」开头的资源条目，不含模板）
+    entries = re.findall(r"^### [^#\n].*$", text, re.M)
+    for m in re.finditer(r"^### (.+)$", text, re.M):
+        title = m.group(1)
+        if "模板" in title or "复制填写" in title:
+            continue
+        start = m.end()
+        nxt = text.find("\n### ", start)
+        body = text[start:nxt if nxt != -1 else len(text)]
+        for field in ("入口：", "触发场景：", "给地址方式：", "范围：", "禁止事项："):
+            if field not in body:
+                errors.append(f"external-resources.md 条目「{title.strip()}」缺字段：{field}")
+    print(f"  · external-resources.md：{len(entries)} 个资源条目")
+
+
 def main() -> int:
     print("Gitee 仓库合规自检")
     print(f"根目录：{ROOT}\n")
 
     tracked = git_tracked()
     files = all_files(tracked)
-    print("[1/8] 必备文件")
+    print("[1/9] 必备文件")
     check_required()
-    print("[2/8] SKILL.md frontmatter")
+    print("[2/9] SKILL.md frontmatter")
     check_frontmatter()
-    print("[3/8] 编码 / BOM / 换行 / 体积")
+    print("[3/9] 编码 / BOM / 换行 / 体积")
     check_encoding_and_size(files)
-    print("[4/8] 本机路径与凭据")
+    print("[4/9] 本机路径与凭据")
     check_sensitive(files)
-    print("[5/8] Markdown 相对链接")
+    print("[5/9] Markdown 相对链接")
     check_links(files, tracked)
-    print("[6/8] README 纯 Markdown")
+    print("[6/9] README 纯 Markdown")
     check_readme_markdown()
-    print("[7/8] 发布版本号一致性")
+    print("[7/9] 发布版本号一致性")
     check_release_version()
-    print("[8/8] 汇总")
+    print("[8/9] 外部资源注册表")
+    check_external_resources()
+    print("[9/9] 汇总")
 
     if warnings:
         for w in warnings:

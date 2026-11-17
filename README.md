@@ -43,7 +43,7 @@ WorkBuddy 技能库搜「助力学」就能装；不想装，复制一段提示�
 
 适合两种人：想自己先看一眼包里有什么，或者技能库里搜不到（装的是旧版本）。
 
-1. 下载 [技能包 ZIP](release/ai-study-tutor-v1.7.0.zip)，按下面第 2 步放好即可。
+1. 下载 [技能包 ZIP](release/ai-study-tutor-v1.7.1.zip)，按下面第 2 步放好即可。
 2. 解压到 `~/.workbuddy/skills/ai-study-tutor/`。`SKILL.md` 要落在这一层，别多套一层文件夹。
 
 不想手动放文件，也可以在 WorkBuddy 里点「技能 → 添加技能 → 上传技能」，直接选这个 ZIP。
@@ -78,6 +78,7 @@ ai-study-tutor/
 ├─ SKILL.md           Skill 的规则入口，装成技能后 AI 读的就是它
 ├─ system-prompt.md   完整提示词，想手动复制就从这拿
 ├─ usage-guide.md     使用手册，比本页详细
+├─ external-resources.md   外部学习资源注册表（PhET / 活页课本 / WolframAlpha，按需推荐）
 ├─ README.md          本页
 ├─ examples/          示例：few-shot 对照样本 + 两个能直接打开的动画
 ├─ release/           发布用的 ZIP 包、头像和构建脚本
@@ -120,7 +121,7 @@ ai-study-tutor/
 
 ## 已知限制
 
-动画要能显示网页才动得起来；写文件要看 AI 有没有这个能力；规则效果随模型而异。完整 9 条见 [使用手册](usage-guide.md) 末尾「附：客观能力边界」。
+动画要能显示网页才动得起来；写文件要看 AI 有没有这个能力；规则效果随模型而异；推荐的外部网站与开源项目均属第三方，其注册、付费与内容与本项目无关，使用请自行判断并承担相应责任。完整 9 条见 [使用手册](usage-guide.md) 末尾「附：客观能力边界」。
 
 ## 许可与免责
 
